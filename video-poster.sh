@@ -2,7 +2,7 @@
 
 # Set global variables
 PROGNAME=$(basename "$0")
-VERSION='1.0.0'
+VERSION='1.0.1'
 
 ##
 # Check for a dependancy
@@ -38,6 +38,7 @@ exit $1
 
 # Check dependacies
 dependancy ffmpeg
+dependancy convert
 
 # Initialize variables
 blur=
@@ -70,8 +71,8 @@ fi
 if [ -z "$outfile" ]; then
   # Strip off extension and add new extension
   ext="${infile##*.}"
-  path=$(dirname "$infile")
-  outfile="$path/$(basename "$infile" ".$ext")-poster.jpg"
+  filepath=$(dirname "$infile")
+  outfile="$filepath/$(basename "$infile" ".$ext")-poster.jpg"
 fi
 
 if [ -z "$infile" ]; then printHelpAndExit 1; fi
@@ -86,4 +87,5 @@ if [ $blur ]; then
   blur="-blur 0x${blur}"
 fi
 
-ffmpeg -loglevel panic -i "$infile" -vframes 1 -ss $frame -f image2pipe - | convert $scale $blur - "$outfile"
+ffmpeg -loglevel panic -i "$infile" -vframes 1 -ss $frame -f image2pipe - | \
+  convert $scale $blur - "$outfile"
